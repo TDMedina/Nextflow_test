@@ -21,7 +21,7 @@ WORKDIR /usr/src/scratch
 
 # Install RSEM
 RUN wget https://github.com/deweylab/RSEM/archive/refs/tags/v1.3.3.tar.gz \
-    && tar -xzvf RSEM-1.3.3.tar.gz \
+    && tar -xzvf v1.3.3.tar.gz \
     && cd RSEM-1.3.3 \
     && make \
     && make install \
