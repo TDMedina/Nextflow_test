@@ -1,9 +1,5 @@
-name: test_env
+name: first_script_env
 channels:
   - bioconda
-  - cbp44
 dependencies:
-  - cufflinks=2.2.1
-  - cpc2=2.0b
-  - deeptools=2.0
-  - tophat=2.1.1
+  - fastqc

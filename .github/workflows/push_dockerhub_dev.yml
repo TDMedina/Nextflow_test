@@ -1,14 +1,14 @@
-name: RTP Docker push (dev)
+name: RTP Docker push (first_script)
 # This builds the docker image and pushes it to DockerHub
 # Runs on push events to 'dev', including PRs.
 on:
   push:
     branches:
-      - dev
+      - first_script
 
 jobs:
   push_dockerhub:
-    name: Push new Docker image to Docker Hub (dev)
+    name: Push new Docker image to Docker Hub (first_script)
     runs-on: ubuntu-latest
     # Only run for your repo
     if: ${{ github.repository == 'TDMedina/nextflow_test' }}
