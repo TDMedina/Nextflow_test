@@ -2,6 +2,8 @@ FROM nfcore/base:1.14
 LABEL authors="Barry Digby" \
     description="Docker container containing fastqc"
 
+RUN apt-get update; apt-get clean all; apt-get install --yes unzip
+
 WORKDIR ./
 COPY environment.yml ./
 RUN conda env create -f environment.yml && conda clean -a
