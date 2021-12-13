@@ -1,5 +1,9 @@
 name: test_env
 channels:
- - bioconda
+  - bioconda
+  - cbp44
 dependencies:
- - fastqc
+  - cufflinks=2.2.1
+  - cpc2=2.0b
+  - deeptools=2.0
+  - tophat=2.1.1
