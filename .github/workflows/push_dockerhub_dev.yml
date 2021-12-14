@@ -4,7 +4,7 @@ name: RTP Docker push (first_script)
 on:
   push:
     branches:
-      - github_synced
+      - main
 
 jobs:
   push_dockerhub:
