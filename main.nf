@@ -42,5 +42,6 @@ process FASTQC{
     script:
     """
     fastqc -q ${reads}
+    multiqc ./fastqc
     """
 }
