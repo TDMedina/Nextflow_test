@@ -23,15 +23,13 @@ Channel.fromFilePairs( params.input, checkIfExists: true )
 
 process FASTQC{
 
-    echo true
-
     publishDir "./fastqc", mode: 'copy'
 
     input:
     tuple val(base), file(reads) from ch_reads
 
     output:
-    tuple val(base), file("*.{html,zip}") into ch_multiqc
+    file("*.{html,zip}") into ch_multiqc
 
     /*script:
     """
@@ -42,6 +40,21 @@ process FASTQC{
     script:
     """
     fastqc -q ${reads}
-    multiqc ./fastqc
+    """
+}
+
+process MULTIQC{
+
+    publishDir "./multiqc", mode: "copy"
+
+    input:
+    file(htmls) from ch_multiqc.collect()
+
+    output:
+    file("*.html") into ch_out
+
+    script:
+    """
+    multiqc .
     """
 }
