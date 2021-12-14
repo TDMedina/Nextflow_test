@@ -2,4 +2,7 @@ name: first_script_env
 channels:
   - bioconda
 dependencies:
-  - fastqc
+ - fastqc
+ - multiqc
+ - gffread
+ - kallisto
