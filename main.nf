@@ -66,7 +66,7 @@ process INDEX{
     """
 }
 
-/*
+
 process KALLISTO_QUANT{
     publishDir "${params.outdir}/count_data", mode: "copy"
 
@@ -83,7 +83,7 @@ process KALLISTO_QUANT{
     """
 
 }
-
+/*
 process MULTIQC{
     publishDir "${params.outdir}/quality_control/multiqc", mode: "copy"
 
