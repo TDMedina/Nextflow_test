@@ -18,7 +18,7 @@ if(has_extension(params.input, ".csv")){
 ch_fasta = Channel.value(file(params.fasta))
 ch_gtf = Channel.value(file(params.gtf))
 
-ch_raw_reads.view()
+//ch_raw_reads.view()
 
 process FASTQC{
     publishDir "${params.outdir}/quality_control/fastqc", mode: 'copy'
