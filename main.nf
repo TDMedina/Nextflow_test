@@ -79,7 +79,7 @@ process KALLISTO_QUANT{
 
     script:
     """
-    kallisto quant --index="${tx_index}" --output-dir="${params.outdir}/count_data" ${fastq}
+    kallisto quant --index="${tx_index}" --output-dir=./ ${fastq}
     """
 
 }
