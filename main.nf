@@ -58,11 +58,11 @@ process INDEX{
     file(tx_fasta) from transcriptome_created
 
     output:
-    file("${tx_fasta.baseName}.tx.fa.idx") into transcriptome_index
+    file("${tx_fasta.baseName}.fa.idx") into transcriptome_index
 
     script:
     """
-    kallisto index --index="${tx_fasta.baseName}.tx.fa.idx" "${tx_fasta}"
+    kallisto index --index="${tx_fasta.baseName}.fa.idx" "${tx_fasta}"
     """
 }
 
@@ -79,7 +79,7 @@ process KALLISTO_QUANT{
 
     script:
     """
-    kallisto quant --index="${tx_index}" --output-dir="${params.outdir}/count_data" "${fastq}"
+    kallisto quant --index="${tx_index}" --output-dir="${params.outdir}/count_data" ${fastq}
     """
 
 }
