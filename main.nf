@@ -84,7 +84,7 @@ process KALLISTO_QUANT{
     """
 
 }
-/*
+
 process MULTIQC{
     publishDir "${params.outdir}/quality_control/multiqc", mode: "copy"
 
@@ -100,7 +100,7 @@ process MULTIQC{
     multiqc .
     """
 }
-*/
+
 
 /*
 ================================================================================
