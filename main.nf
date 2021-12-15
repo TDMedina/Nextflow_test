@@ -62,7 +62,7 @@ process INDEX{
 
     script:
     """
-    kallisto index --index="${fasta.baseName}.tx.fa.idx" "${tx_fasta}"
+    kallisto index --index="${tx_fasta}.idx" "${tx_fasta}"
     """
 }
 
