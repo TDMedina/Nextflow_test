@@ -2,8 +2,8 @@ name: CI
 # This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
 on:
   push:
-    branches:
-      - dev
+    branches-ignore:
+      - main
   pull_request:
   release:
     types: [published]
