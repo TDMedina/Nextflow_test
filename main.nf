@@ -1,28 +1,5 @@
 #!/usr/bin/env nextflow
 
-/*Channel.fromFilePairs("/data/Nextflow_Data/test-datasets/fastq/*_{1,2}.fastq.gz", checkIfExists: true)
-    .set{ ch_reads }
-
-Channel.fromPath("/data/fust1_rep1_1.fastq.gz")
-    .set{ ch_pheno }
-ch_pheno.view()
-*/
-
-/*
-Channel.fromFilePairs("*_{1,2}.fastq.gz", checkIfExists: true)
-    .set{ ch_reads1 }
-ch_reads1.view()
-
-Channel.fromFilePairs("/data/*_{1,2}.fastq.gz", checkIfExists: true)
-    .set{ ch_reads2 }
-ch_reads2.view()
-
-
-Channel.fromFilePairs( params.input, checkIfExists: true )
-    .set{ ch_reads }
-*/
-
-
 // parse input data
 if(has_extension(params.input, ".csv")){
 
@@ -31,28 +8,26 @@ if(has_extension(params.input, ".csv")){
 
 }else{
 
-    exit 1, "error: The sample input file must have the extension '.csv'."
+    ch_input = Channel.fromFilePairs(params.input, checkIfExists: true)
 
 }
 
 // stage input data
 ( ch_qc_reads, ch_raw_reads) = ch_input.into(2)
 
+ch_fasta = Channel.value(file(params.fasta))
+ch_gtf = Channel.value(file(params.gtf))
+
 ch_raw_reads.view()
 
 process FASTQC{
-    tag "${base}"
-    publishDir params.outdir, mode: 'copy',
-        saveAs: { params.save_qc_intermediates ? "fastqc/${it}" : null }
-
-    when:
-    params.run_qc
+    publishDir "${params.outdir}/quality_control/fastqc", mode: 'copy'
 
     input:
     tuple val(base), file(reads) from ch_qc_reads
 
     output:
-    tuple val(base), file("*.{html,zip}") into ch_multiqc
+    file("*.{html,zip}") into ch_multiqc
 
     script:
     """
@@ -60,29 +35,60 @@ process FASTQC{
     """
 }
 
-/*
-process FASTQC{
-
-    publishDir "./fastqc", mode: 'copy'
+process TX{
+    publishDir "${params.outdir}/reference", mode: 'copy'
 
     input:
-    tuple val(base), file(reads) from ch_reads
+    file(fasta) from ch_fasta
+    file(gtf) from ch_gtf
 
     output:
-    file("*.{html,zip}") into ch_multiqc
+    file("${fasta.baseName}.tx.fa") into transcriptome_created
 
     script:
     """
-    fastqc -q ${reads}
+    gffread -F -w "${fasta.baseName}.tx.fa" -g $fasta $gtf
     """
 }
 
-process MULTIQC{
+process INDEX{
+    publishDir "${params.outdir}/reference", mode: "copy"
 
-    publishDir "./multiqc", mode: "copy"
+    input:
+    file(tx_fasta) from transcriptome_created
+
+    output:
+    file("${fasta.baseName}.tx.fa.idx") into transcriptome_index
+
+    script:
+    """
+    kallisto index --index="${fasta.baseName}.tx.fa.idx" "${tx_fasta}"
+    """
+}
+
+process KALLISTO_QUANT{
+    publishDir "${params.outdir}/count_data", mode: "copy"
+
+    input:
+    file(tx_index) from transcriptome_index
+    file(fastq) from ch_raw_reads
+
+    output:
+    path("${params.outdir}/count_data") into outdir
+
+    script:
+    """
+    kallisto quant --index="${tx_index}" --output-dir="${params.outdir}/count_data" "${fastq}"
+    """
+
+}
+
+process MULTIQC{
+    publishDir "${params.outdir}/quality_control/multiqc", mode: "copy"
 
     input:
     file(htmls) from ch_multiqc.collect()
+    file(kallisto_logs) from kallisto_logs.collect()
 
     output:
     file("*.html") into ch_out
@@ -92,7 +98,6 @@ process MULTIQC{
     multiqc .
     """
 }
-*/
 
 /*
 ================================================================================
