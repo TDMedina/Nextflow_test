@@ -72,14 +72,15 @@ process KALLISTO_QUANT{
 
     input:
     file(tx_index) from transcriptome_index
-    file(fastq) from ch_raw_reads
+    tuple val(base), file(reads) from ch_raw_reads
 
     output:
-    path("${params.outdir}/count_data") into kallisto_logs
+    file("${base}") into kallisto_out
+    file("${base}.kallisto.log") into kallisto_logs
 
     script:
     """
-    kallisto quant --index="${tx_index}" --output-dir=./ ${fastq}
+    kallisto quant --index="${tx_index}" --output-dir="${base}" ${reads} &> "${base}.kallisto.log"
     """
 
 }
