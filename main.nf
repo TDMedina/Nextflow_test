@@ -74,7 +74,7 @@ process KALLISTO_QUANT{
     file(fastq) from ch_raw_reads
 
     output:
-    path("${params.outdir}/count_data") into outdir
+    path("${params.outdir}/count_data") into kallisto_logs
 
     script:
     """
